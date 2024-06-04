@@ -2,53 +2,61 @@
 
 use ColorThief\ColorThief;
 use SilverStripe\Core\Extension;
+use SilverStripe\Core\Injector\Injector;
+use Psr\SimpleCache\CacheInterface;
 
 class DominantColorImageExtension extends Extension
 {
     /**
-     * Calculation accuracy of the dominant color
-     * @var Int
-     */
-    static public $quality = 10;
-
-    /**
      * Get the primary dominant color of this Image
-     * @return String color as hex i.e. #ff0000
+     * 
+     * @return string|null color as hex i.e. #ff0000
      */
-    public function DominantColor()
+    public function DominantColor(): ?string
     {
-        $sourceImage = $this->owner->getFullPath();
+        $image = $this->owner->getFullPath();
 
-        $cache = SS_Cache::factory(get_called_class());
-        $cacheKey = md5($this->owner->ID . $sourceImage);
+        /** @var CacheInterface $cache */
+        $cache = Injector::inst()->get(CacheInterface::class . '.dominantcolor');
+        $cacheKey = md5($this->owner->ID . $image);
 
-        $color = $cache->load($cacheKey);
-
-        if ($color) return $color;
-
-        $color = ColorThief::getColor(
-            $sourceImage = $sourceImage,
-            $quality = Config::inst()->get(get_called_class(), 'quality')
-        );
-
-        $color = self::colorToHex($color);
-
-        if ($color) {
-            $cache->save($color, $cacheKey);
+        // check if cache is already set
+        if ($cache->has($cacheKey)) {
+            // return hex color
+            return $cache->get($cacheKey);
         }
 
-        return $color;
+        // get dominant color from image
+        $rgbColor = ColorThief::getColor($image);
+
+        if (!$rgbColor || empty($rgbColor)) {
+            return null;
+        }
+
+        // convert RGB color to hex
+        $hexColor = self::rgbToHex($rgbColor);
+
+        // set cache to new color hex
+        $cache->set($cacheKey, $hexColor, 120);
+
+        return $hexColor;
     }
 
+
     /**
-     * Converts a color array into a hex string
-     * @param Array $color [red, green, blue]
-     * @return String color as hex i.e. #ff0000
+     * Converts an RGB array into a hex string
+     * 
+     * @param array $color [red, green, blue]
+     * @return string|null color as hex i.e. #ff0000
      */
-    protected static function colorToHex($color)
+    protected static function rgbToHex($color): ?string
     {
-        if (empty($color)) return false;
+        if (empty($color)) {
+            return null;
+        } 
+            
         $hex = dechex(($color[0] << 16) | ($color[1] << 8) | $color[2]);
+        
         return '#' . str_pad($hex, 6, '0', STR_PAD_LEFT);
     }
 }
