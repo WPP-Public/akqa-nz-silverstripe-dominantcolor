@@ -1,15 +1,10 @@
 # silverstripe-dominantcolor
 
-Enhance the Image class by providing the dominant color from an image. Uses [Color Thief PHP](https://github.com/ksubileau/color-thief-php).
+Utilises the [Color Thief PHP](https://github.com/ksubileau/color-thief-php) library to extract the dominant color from an image. This can be particularly useful for setting the background color of lazy-loaded images or for styling accompanying HTML markup.
 
 ## Requirements
 
 - Silverstripe 4 or 5
-- GD, Imagick or Gmagick
-
-## Installation
-
-The recommended way to install is through Composer:
 
 ```
 composer require heyday/silverstripe-dominantcolor
@@ -17,16 +12,12 @@ composer require heyday/silverstripe-dominantcolor
 
 ## Usage
 
-Adds the `DominantColor()` method to `Image` which the primary dominant color of this Image as hex (i.e. `'#bada55'`.)
+Adds the `DominantColor()` method to the `Image` class which returns the dominant color of an image in hex format (`'#bada55'`)
 
 ```html
-…
-<div style="background-color:$SomeImage.DominantColor">
-…
+<div style="background-color: $Image.DominantColor">
 ```
 
 ```php
-…
-$color = Image::get()->find(…)->DominantColor();
-…
+Image::get()->find(…)->DominantColor();
 ```
