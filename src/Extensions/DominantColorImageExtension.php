@@ -1,6 +1,7 @@
 <?php
 
 use ColorThief\ColorThief;
+use SilverStripe\Core\Extension;
 
 class DominantColorImageExtension extends Extension
 {
