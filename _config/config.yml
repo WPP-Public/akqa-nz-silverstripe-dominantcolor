@@ -1,6 +1,12 @@
 ---
 Name: Heyday Dominant Color Config
 ---
+SilverStripe\Core\Injector\Injector:
+  Psr\SimpleCache\CacheInterface.dominantcolor:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "dominantcolor"
+      
 SilverStripe\Assets\Image:
   extensions:
     - DominantColorImageExtension
