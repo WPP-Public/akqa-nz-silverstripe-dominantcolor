@@ -14,7 +14,11 @@ class DominantColorImageExtension extends Extension
      */
     public function DominantColor(): ?string
     {
-        $image = $this->owner->getFullPath();
+        $image = $this->owner->AbsoluteLink();
+
+        if (!$image || empty($image)) {
+            return null;
+        }
 
         /** @var CacheInterface $cache */
         $cache = Injector::inst()->get(CacheInterface::class . '.dominantcolor');
