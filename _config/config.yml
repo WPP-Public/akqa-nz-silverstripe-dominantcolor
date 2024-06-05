@@ -1,6 +1,6 @@
 ---
 Name: Heyday Dominant Color Config
 ---
-Image:
+SilverStripe\Assets\Image:
   extensions:
     - DominantColorImageExtension
