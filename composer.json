@@ -2,7 +2,7 @@
   "name": "heyday/silverstripe-dominantcolor",
   "description": "Enhance the Image class by providing the dominant color from an image.",
   "license": "MIT",
-  "type": "silverstripe-module",
+  "type": "silverstripe-vendormodule",
   "homepage": "https://github.com/heyday/silverstripe-dominantcolor",
   "keywords": [
     "color", 
